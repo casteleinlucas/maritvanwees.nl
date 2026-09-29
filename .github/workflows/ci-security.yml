@@ -1,0 +1,53 @@
+name: CI Security
+
+concurrency:
+  group: ${{ github.workflow_ref }}-${{ github.ref }}
+  cancel-in-progress: true
+
+'on':
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - 'release/**'
+
+# On pull_request, gitleaks lists the PR's commits via the REST API, which needs
+# pull-requests read; posting its findings as a PR comment needs write. Without
+# this block the job inherits the repo default token scope and fails with
+# "Resource not accessible by integration" (403).
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  security:
+    name: Security
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          # gitleaks scans history, so it needs the full clone
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit (high+)
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+      # gitleaks-action is free for personal repositories; GITLEAKS_LICENSE is
+      # only required when the repo owner is an organisation.
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: true

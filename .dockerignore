@@ -1,0 +1,23 @@
+node_modules
+.git
+.gitignore
+*.md
+.env*
+
+# build output — rebuilt inside the image, must never be copied in
+.output
+.nuxt
+.nitro
+.cache
+dist
+.eslintcache
+
+# tooling that has no bearing on the image
+.github
+.vscode
+.idea
+Dockerfile
+.dockerignore
+docker-compose*.yaml
+docker-compose*.yml
+ecosystem.config.cjs

@@ -1,10 +1,24 @@
 <script setup lang="ts">
+import { withoutTrailingSlash } from 'ufo'
 import { PROFILE } from '@/constants/profile'
 
 // the intro: the name alone, centred, being written; then the details rise from below and
 // push it up to its place. the details wait for the pen: this is the signature's timing
 const SIGNATURE = { delay: 400, duration: 2800 }
 const detailsAt = `${SIGNATURE.delay + SIGNATURE.duration}ms`
+
+// the page's own address for search engines and shared links; the title and description are
+// the site-wide ones from nuxt.config.ts
+const siteUrl = withoutTrailingSlash(useRuntimeConfig().public.siteUrl)
+useHead({ link: [{ rel: 'canonical', href: siteUrl }] })
+useSeoMeta({
+  ogType: 'website',
+  ogLocale: 'nl_NL',
+  ogUrl: siteUrl,
+  ogSiteName: PROFILE.name,
+  ogTitle: PROFILE.name,
+  ogDescription: `${PROFILE.name}, ${PROFILE.tagline.toLowerCase()}. ${PROFILE.location}.`,
+})
 </script>
 
 <template>
