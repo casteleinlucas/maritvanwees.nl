@@ -8,11 +8,11 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "type-check": "nuxt typecheck",
+    "typecheck": "nuxt typecheck",
     "lint": "eslint . --cache",
     "lint:fix": "eslint . --fix --cache",
-    "format": "prettier --write app/ nuxt.config.ts",
-    "format:check": "prettier --check app/ nuxt.config.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "signature": "node scripts/generate-signature.mjs"
   },
   "dependencies": {
@@ -33,6 +33,6 @@
     "vue-tsc": "^3.2.2"
   },
   "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+    "node": ">=22.19.0"
   }
 }

@@ -1,0 +1,14 @@
+# build output
+.output
+.nuxt
+.nitro
+.cache
+dist
+node_modules
+
+# generated
+package-lock.json
+app/constants/signature.ts
+
+# not ours to reformat
+scripts/fonts
