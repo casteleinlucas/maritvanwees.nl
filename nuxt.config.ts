@@ -19,6 +19,32 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    // security headers on every response. set here rather than in a proxy: under coolify only
+    // traefik stands in front, and it adds none of its own. the csp allows inline scripts and
+    // styles because nuxt inlines its config and FramedPlate sets the crop as a style attribute;
+    // everything else (fonts, photos, the payload) comes from this origin. data: is for the svg
+    // textures in the css
+    '/**': {
+      headers: {
+        'strict-transport-security': 'max-age=31536000',
+        'x-content-type-options': 'nosniff',
+        'referrer-policy': 'strict-origin-when-cross-origin',
+        'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+        'content-security-policy': [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data:",
+          "font-src 'self'",
+          "connect-src 'self'",
+          "manifest-src 'self'",
+          "frame-ancestors 'none'",
+          "base-uri 'self'",
+          "form-action 'none'",
+          "object-src 'none'",
+        ].join('; '),
+      },
+    },
     // the page itself is always revalidated, so a deploy shows at once
     '/': { headers: { 'cache-control': 'no-cache' } },
     // the photos only change with `npm run photos`, which a deploy ships under the same names:

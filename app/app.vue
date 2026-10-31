@@ -6,9 +6,11 @@ import { PROFILE } from '@/constants/profile'
 // framed as plates, the experience on leather cards and a calling card to close
 
 // there are no pages, so without this every address would answer 200 with the home page.
-// error.vue shows the 404
+// error.vue shows the 404. not `fatal`: on the server it renders the error page all the same, and
+// a fatal error is logged with its whole stack, which bots probing addresses would fill the logs
+// with
 if (import.meta.server && useRequestURL().pathname !== '/') {
-  throw createError({ statusCode: 404, statusMessage: 'Pagina niet gevonden', fatal: true })
+  throw createError({ statusCode: 404, statusMessage: 'Pagina niet gevonden' })
 }
 
 // the page's own address for search engines and shared links

@@ -45,23 +45,27 @@ npm run dev        # http://localhost:3000
 
 ## Deploy
 
-Zelfde opzet als poespasser-web: een Ploi-droplet, nginx voor TLS, PM2 voor het proces.
+Via [Coolify](https://coolify.io), met de `Dockerfile` (build pack **Dockerfile**, niet Docker
+Compose: het compose-bestand bindt een poort op de host, en die botst met Traefik).
 
-```bash
-npm ci
-npm run build
-pm2 startOrReload ecosystem.config.cjs
-```
+- **Ports Exposes**: `8080`. Het image draait de nitro-server als `node` op `0.0.0.0:8080`.
+- **Domein**: `https://maritvanwees.nl`; TLS regelt Coolify.
+- **Environment**: niets nodig. `NUXT_PUBLIC_SITE_URL` staat in `nuxt.config.ts` al op de
+  productie-origin; alleen een preview-deploy zet hem anders (zie `.env.example`). De pagina wordt
+  bij de build geprerenderd, dus de canonical en OG-tags in de html komen uit die default.
+- **Healthcheck**: zit in het image (`wget` op `/`). Coolify zet pas verkeer op een nieuwe container
+  als die gezond is, dus een deploy die niet opkomt gaat niet live.
+- **Build**: `npm ci` en `npm run build` in het image. `@nuxt/fonts` haalt de lettertypes dan bij
+  Google op, dus de server heeft bij het bouwen internet nodig.
 
-`ecosystem.config.cjs` draait de nitro-server (`.output/server/index.mjs`) op `127.0.0.1:3002`
-(poespasser-web heeft 3000, simplepark-web 3001); de nginx-site in Ploi moet naar die poort
-proxyen. `wait_ready` zorgt dat een deploy pas slaagt als dit proces zelf luistert.
+Compressie (brotli/gzip naast elk bestand), cache-headers en de security-headers (HSTS, CSP,
+nosniff, Referrer-Policy, Permissions-Policy) zet de app zelf, in `routeRules` in
+`nuxt.config.ts`: onder Coolify staat er alleen Traefik voor, en die voegt ze niet toe.
 
-De publieke config (`NUXT_PUBLIC_SITE_URL`) staat in het ecosystem-bestand; `.env.example` toont
-wat er te zetten is. De pagina zelf wordt bij `npm run build` geprerenderd, dus de canonical en
-OG-tags in de html komen uit de default in `nuxt.config.ts`.
+Lokaal proefdraaien kan met `docker compose up --build`, en dan http://localhost:3000.
 
-Een Docker-image (`Dockerfile`, `docker-compose.yaml`) is er ook, voor lokaal proefdraaien:
-`docker compose up --build` en dan http://localhost:3000.
+`ecosystem.config.cjs` en `server/plugins/pm2-ready.ts` zijn van de eerdere Ploi-opzet (nginx met
+PM2 op `127.0.0.1:3002`). In het Docker-image doen ze niets.
 
-CI (`.github/workflows/`): lint + typecheck, prettier en `npm audit` + gitleaks, op elke PR.
+CI (`.github/workflows/`): lint + typecheck, een build met een smoke-test (statuscodes en
+security-headers), prettier en `npm audit` + gitleaks, op elke PR.

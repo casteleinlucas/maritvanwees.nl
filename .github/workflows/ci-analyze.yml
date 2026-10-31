@@ -55,3 +55,5 @@ jobs:
           test "$(status /robots.txt)" = 200
           test "$(status /sitemap.xml)" = 200
           test "$(status /bestaat-niet)" = 404
+          curl -sI http://127.0.0.1:3010/ | grep -qi '^content-security-policy:'
+          curl -sI http://127.0.0.1:3010/ | grep -qi '^strict-transport-security:'

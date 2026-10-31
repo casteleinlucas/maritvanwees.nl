@@ -26,5 +26,11 @@ USER node
 
 EXPOSE 8080
 
+# Healthy once the page itself answers. Coolify waits for this before it switches traffic to a new
+# container and stops the old one, so a deploy that does not come up never goes live. wget is
+# busybox's, already in the alpine image; the shell form lets ${PORT} follow an override.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -q -O /dev/null "http://127.0.0.1:${PORT}/" || exit 1
+
 # Public runtime config (NUXT_PUBLIC_*) is injected at runtime by the host or Compose.
 CMD ["node", ".output/server/index.mjs"]
