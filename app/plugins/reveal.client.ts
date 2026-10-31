@@ -1,31 +1,29 @@
-// the blocks marked [data-reveal] fade in as they scroll into view, the ones that arrive together
-// one after the other, and each seam between chapters is sewn shut (main.css). `.reveal-on` on
-// <html> hides them until then, and is only set here, so the prerendered html shows everything
-// on its own, and the reveals stay off for reduced motion
+// reveals the blocks marked [data-reveal], which main.css hides from the first paint: the ones on
+// the first screen fade in as the page opens, just after the title page, the rest as they scroll
+// into view, the ones that arrive together one after the other. each seam between chapters is
+// sewn shut as it comes in. `.reveal-on` marks that this ran, which stops the css fallback that
+// would otherwise show everything after three seconds
 export default defineNuxtPlugin((nuxtApp) => {
   const root = document.documentElement
 
   nuxtApp.hook('app:mounted', () => {
+    const blocks = [...document.querySelectorAll<HTMLElement>('[data-reveal]')]
+    const seams = [...document.querySelectorAll<HTMLElement>('.seamed')]
+
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduceMotion || !('IntersectionObserver' in window)) {
+      blocks.forEach((block) => block.classList.add('is-visible'))
+      root.classList.add('reveal-on')
       return
     }
 
-    // what is already on screen (a tall screen, a reload halfway down, a link to a chapter) stays
-    // as it is; hiding it would make it blink out and back
+    // the first screen: after the title page has risen in, one block after the other
     const isOnScreen = (element: Element) => element.getBoundingClientRect().top < innerHeight
-    const blocks = [...document.querySelectorAll('[data-reveal]')]
-    const seams = [...document.querySelectorAll('.seamed')]
-    for (const element of blocks) {
-      if (isOnScreen(element)) {
-        element.classList.add('is-visible')
-      }
-    }
-    for (const element of seams) {
-      if (isOnScreen(element)) {
-        element.classList.add('is-sewn')
-      }
-    }
+    blocks.filter(isOnScreen).forEach((block, index) => {
+      block.style.setProperty('--reveal-delay', `${450 + index * 140}ms`)
+      block.classList.add('is-visible')
+    })
+    seams.filter(isOnScreen).forEach((seam) => seam.classList.add('is-sewn'))
 
     root.classList.add('reveal-on')
 

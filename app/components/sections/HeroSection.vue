@@ -131,15 +131,19 @@ const DISCIPLINE_PAIRS = [PROFILE.disciplines.slice(0, 2), PROFILE.disciplines.s
 }
 
 /* desktop: the frontispiece, the plate on the left and the title page beside it, the name on
-   two lines */
+   two lines. it fills the first screen under the header (about 7.5rem tall) and sits in its
+   middle, with as much room above as below; the margin keeps the intro at a chapter's distance */
 @media (min-width: 64rem) {
   .hero {
     display: grid;
     grid-template-columns: minmax(0, 26rem) minmax(0, 32rem);
     justify-content: center;
+    align-content: center;
     align-items: center;
     column-gap: clamp(3rem, 6vw, 6.5rem);
-    padding-top: 2rem;
+    min-height: calc(100svh - 7.5rem);
+    padding-block: clamp(2.5rem, 7vh, 5rem);
+    margin-bottom: clamp(2rem, 4vw, 4rem);
   }
 
   .hero .plate {

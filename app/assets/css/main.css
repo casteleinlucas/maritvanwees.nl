@@ -251,19 +251,28 @@ img {
   transform: rotate(45deg);
 }
 
-/* blocks fade in as they scroll into view, one after the other (--reveal-delay), and each seam
-   is sewn shut stitch by stitch. plugins/reveal.client.ts sets .reveal-on only when motion is
-   welcome, so without js or with reduced motion everything is simply there */
-@media (prefers-reduced-motion: no-preference) {
-  .reveal-on [data-reveal] {
+/* blocks fade in as they come into view, one after the other (--reveal-delay): the ones on the
+   first screen as the page opens, the rest as they scroll in. they are hidden from the first
+   paint, so nothing shows and then blinks out while the script starts; plugins/reveal.client.ts
+   reveals them. without js, or with reduced motion, everything is simply there, and should the
+   script never run, a fallback shows it all after three seconds */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
     opacity: 0;
     transition: opacity 0.9s var(--ease) var(--reveal-delay, 0s);
   }
 
-  .reveal-on [data-reveal].is-visible {
+  [data-reveal].is-visible {
     opacity: 1;
   }
 
+  html:not(.reveal-on) [data-reveal] {
+    animation: fade 0.6s 3s forwards;
+  }
+}
+
+/* each seam is sewn shut stitch by stitch as it scrolls into view */
+@media (prefers-reduced-motion: no-preference) {
   .reveal-on .seamed::before {
     clip-path: inset(0 100% 0 0);
     transition: clip-path 1.6s steps(48);

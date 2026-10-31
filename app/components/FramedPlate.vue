@@ -202,14 +202,17 @@ const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
   .plate--hero img {
     animation: settle 3.2s var(--ease) 0.55s both;
   }
+}
 
-  /* in the chapters the frame is there at once and the photo develops in it */
-  .reveal-on .plate[data-reveal] {
+/* in the chapters the frame is there at once and the photo develops in it (the reveal and its
+   fallback are explained in main.css) */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .plate[data-reveal] {
     opacity: 1;
-    transform: none;
+    animation: none;
   }
 
-  .reveal-on .plate[data-reveal] img {
+  .plate[data-reveal] img {
     opacity: 0;
     transform: scale(1.04);
     transition:
@@ -217,9 +220,13 @@ const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
       transform 2.4s var(--ease) var(--reveal-delay, 0s);
   }
 
-  .reveal-on .plate[data-reveal].is-visible img {
+  .plate[data-reveal].is-visible img {
     opacity: 1;
     transform: none;
+  }
+
+  html:not(.reveal-on) .plate[data-reveal] img {
+    animation: fade 0.6s 3s forwards;
   }
 }
 </style>
