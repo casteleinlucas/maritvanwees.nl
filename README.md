@@ -1,12 +1,12 @@
 # maritvanwees.nl
 
-Persoonlijke pagina van Marit van Wees, als een register uit een zadelmakerij: een titelpagina en
-vijf hoofdstukken (I–V) op bosgroen, navy en cognacleer, foto's ingelijst als platen, haar ervaring
-op leren kaarten en een visitekaartje om af te sluiten.
+Source of [maritvanwees.nl](https://maritvanwees.nl), the personal website of Marit van Wees.
 
-Gebouwd met [Nuxt 4](https://nuxt.com) (Vue 3), naar het model van simplepark-web-v3 en poespasser-web.
+Built with [Nuxt 4](https://nuxt.com) (Vue 3) and TypeScript.
 
-## Setup
+## Getting started
+
+Requires the Node version in `.nvmrc`.
 
 ```bash
 npm install
@@ -15,57 +15,47 @@ npm run dev        # http://localhost:3000
 
 ## Scripts
 
-| script              | doet                                     |
-| ------------------- | ---------------------------------------- |
-| `npm run dev`       | dev server met hot reload                |
-| `npm run build`     | productiebuild (`.output/`)              |
-| `npm run generate`  | statische export (`.output/public/`)     |
-| `npm run typecheck` | vue-tsc typecheck                        |
-| `npm run lint`      | eslint (`lint:fix` repareert)            |
-| `npm run format`    | prettier (`format:check` alleen checken) |
-| `npm run photos`    | foto's opnieuw naar webversies omzetten  |
+| Script              | Description                                    |
+| ------------------- | ---------------------------------------------- |
+| `npm run dev`       | Start the dev server with hot reload           |
+| `npm run build`     | Build for production (`.output/`)              |
+| `npm run generate`  | Export a static site (`.output/public/`)       |
+| `npm run typecheck` | Type-check with vue-tsc                        |
+| `npm run lint`      | Lint with ESLint (`lint:fix` to fix)           |
+| `npm run format`    | Format with Prettier (`format:check` to check) |
+| `npm run signature` | Regenerate the handwritten name as SVG paths   |
 
-## Structuur
+## Project structure
 
-- `app/app.vue` — de pagina: header, de secties en de footer, plus title en deeltags
-- `app/components/sections/` — de titelpagina, de intro en de hoofdstukken I–V
-- `app/components/` — de bouwstenen: `FramedPlate` (foto in passe-partout), `ChapterHead`,
-  `RegisterEntry` (leren kaart), `CallingCard`, `Monogram`, `SiteHeader` en `SiteFooter`
-- `app/constants/profile.ts` — naam, tagline, e-mail, LinkedIn, fotocredit en de ervaring
-- `app/constants/photos.ts` — de vijf foto's met alt-teksten. De originelen staan in `scripts/photos/`;
-  `npm run photos` maakt er `public/photos/` van, in vier breedtes als avif en webp, plus een staande
-  uitsnede van de hoofdfoto. Daarna kiest de browser via `srcset` zelf het kleinste bestand dat past
-- `app/plugins/reveal.client.ts` — blokken die bij het scrollen in beeld komen (niet bij reduced motion)
-- `app/assets/css/main.css` — kleuren, fonts, texturen en de gedeelde stijlen
-- `app/error.vue` — de 404 (elk adres behalve `/`), in dezelfde stijl
-- `public/og.jpg` — de deelafbeelding (1200 × 630); `public/apple-touch-icon.png`, `icon-*.png` en
-  `site.webmanifest` — het monogram als icoon
-- `server/routes/` — `robots.txt` en `sitemap.xml`, gebouwd op `NUXT_PUBLIC_SITE_URL`
-- `server/plugins/pm2-ready.ts` — meldt PM2 dat de server luistert (zie hieronder)
+- `app/` — pages, components, styles and content
+- `app/constants/` — site content and generated assets (e.g. the signature paths)
+- `public/` — static files such as the favicon and the social share image
+- `server/` — `robots.txt`, `sitemap.xml` and server plugins
+- `scripts/` — build-time helpers and the fonts they use
 
-## Deploy
+## Configuration
 
-Via [Coolify](https://coolify.io), met de `Dockerfile` (build pack **Dockerfile**, niet Docker
-Compose: het compose-bestand bindt een poort op de host, en die botst met Traefik).
+Copy `.env.example` to `.env` and adjust as needed. `NUXT_PUBLIC_SITE_URL` sets the base URL used
+for canonical links, Open Graph tags, the sitemap and `robots.txt`.
 
-- **Ports Exposes**: `8080`. Het image draait de nitro-server als `node` op `0.0.0.0:8080`.
-- **Domein**: `https://maritvanwees.nl`; TLS regelt Coolify.
-- **Environment**: niets nodig. `NUXT_PUBLIC_SITE_URL` staat in `nuxt.config.ts` al op de
-  productie-origin; alleen een preview-deploy zet hem anders (zie `.env.example`). De pagina wordt
-  bij de build geprerenderd, dus de canonical en OG-tags in de html komen uit die default.
-- **Healthcheck**: zit in het image (`wget` op `/`). Coolify zet pas verkeer op een nieuwe container
-  als die gezond is, dus een deploy die niet opkomt gaat niet live.
-- **Build**: `npm ci` en `npm run build` in het image. `@nuxt/fonts` haalt de lettertypes dan bij
-  Google op, dus de server heeft bij het bouwen internet nodig.
+## Deployment
 
-Compressie (brotli/gzip naast elk bestand), cache-headers en de security-headers (HSTS, CSP,
-nosniff, Referrer-Policy, Permissions-Policy) zet de app zelf, in `routeRules` in
-`nuxt.config.ts`: onder Coolify staat er alleen Traefik voor, en die voegt ze niet toe.
+The site runs as a Node server behind a reverse proxy, managed by PM2:
 
-Lokaal proefdraaien kan met `docker compose up --build`, en dan http://localhost:3000.
+```bash
+npm ci
+npm run build
+pm2 startOrReload ecosystem.config.cjs
+```
 
-`ecosystem.config.cjs` en `server/plugins/pm2-ready.ts` zijn van de eerdere Ploi-opzet (nginx met
-PM2 op `127.0.0.1:3002`). In het Docker-image doen ze niets.
+`ecosystem.config.cjs` sets the port and the public environment variables.
 
-CI (`.github/workflows/`): lint + typecheck, een build met een smoke-test (statuscodes en
-security-headers), prettier en `npm audit` + gitleaks, op elke PR.
+To try a production build locally with Docker:
+
+```bash
+docker compose up --build    # http://localhost:3000
+```
+
+## CI
+
+GitHub Actions run linting, type-checking, formatting checks and security scans on every pull request.
