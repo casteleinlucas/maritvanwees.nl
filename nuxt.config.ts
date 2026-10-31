@@ -4,15 +4,57 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/fonts'],
 
-  // flat component names regardless of subfolder: `<HandwrittenName>`, not `<HeroHandwrittenName>`
+  // flat component names regardless of subfolder: `<HeroSection>`, not `<SectionsHeroSection>`
   components: [{ path: '~/components', pathPrefix: false }],
 
-  // one static page: prerender it so it ships as plain html
+  // one static page: prerender it so it ships as plain html. robots.txt and the sitemap are
+  // server routes; listing them here makes `generate` write them out too
   ssr: true,
   nitro: {
     prerender: {
-      routes: ['/'],
+      routes: ['/', '/robots.txt', '/sitemap.xml'],
     },
+    // ship .br and .gz next to every public asset; nitro serves them to browsers that ask
+    compressPublicAssets: true,
+  },
+
+  routeRules: {
+    // security headers on every response. set here rather than in a proxy: under coolify only
+    // traefik stands in front, and it adds none of its own. the csp allows inline scripts and
+    // styles because nuxt inlines its config and FramedPlate sets the crop as a style attribute;
+    // everything else (fonts, photos, the payload) comes from this origin. data: is for the svg
+    // textures in the css
+    '/**': {
+      headers: {
+        'strict-transport-security': 'max-age=31536000',
+        'x-content-type-options': 'nosniff',
+        'referrer-policy': 'strict-origin-when-cross-origin',
+        'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+        'content-security-policy': [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline'",
+          "style-src 'self' 'unsafe-inline'",
+          "img-src 'self' data:",
+          "font-src 'self'",
+          "connect-src 'self'",
+          "manifest-src 'self'",
+          "frame-ancestors 'none'",
+          "base-uri 'self'",
+          "form-action 'none'",
+          "object-src 'none'",
+        ].join('; '),
+      },
+    },
+    // the page itself is always revalidated, so a deploy shows at once
+    '/': { headers: { 'cache-control': 'no-cache' } },
+    // the photos only change with `npm run photos`, which a deploy ships under the same names:
+    // a month, not forever
+    '/photos/**': { headers: { 'cache-control': 'public, max-age=2592000' } },
+  },
+
+  features: {
+    // the css comes once, from the stylesheet, instead of also inlined into the html
+    inlineStyles: false,
   },
 
   css: ['~/assets/css/main.css'],
@@ -32,25 +74,49 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'nl' },
-      title: 'Marit van Wees',
+      // the title, description and share tags are set from constants/profile.ts in app.vue
       meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-        {
-          name: 'description',
-          content: 'Marit van Wees — eigenaar van Vlot Vooruit, Oosterhout (Noord-Brabant).',
-        },
-        { name: 'theme-color', content: '#deede7' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        // the forest green of the page, so the browser's bar runs into it
+        { name: 'theme-color', content: '#12241c' },
       ],
-      link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/site.webmanifest' },
+      ],
     },
   },
 
   fonts: {
-    // google provider; @nuxt/fonts generates the @font-face rules with subsetting + preload.
-    // the signature itself is not a web font: a fixed svg of pen strokes (constants/signature.ts)
+    // from google, latin only, with fallbacks measured against georgia so the swap does not move
+    // the page. no `provider: 'google'` per family: that would force the provider's own generic
+    // `serif` fallback over the one set here
     families: [
-      // the details under the signature: a light sans with wide tracking, bold for the title
-      { name: 'Lato', provider: 'google', weights: [300, 700] },
+      // the name, the chapter titles and the monogram: preloaded, it is the first thing seen
+      {
+        name: 'Libre Caslon Display',
+        weights: [400],
+        subsets: ['latin'],
+        fallbacks: ['Georgia'],
+        preload: true,
+      },
+      // the text, with its italic for the tagline and the strap
+      {
+        name: 'EB Garamond',
+        weights: [400],
+        styles: ['normal', 'italic'],
+        subsets: ['latin'],
+        fallbacks: ['Georgia'],
+      },
+      // engraved caps for the labels and the navigation
+      {
+        name: 'Marcellus SC',
+        weights: [400],
+        subsets: ['latin'],
+        fallbacks: ['Georgia'],
+        preload: true,
+      },
     ],
   },
 })
