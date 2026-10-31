@@ -1,7 +1,8 @@
 # maritvanwees.nl
 
-Persoonlijke pagina van Marit van Wees. Eén vast scherm: een geanimeerde handgeschreven naam met
-daaronder haar gegevens.
+Persoonlijke pagina van Marit van Wees, als een register uit een zadelmakerij: een titelpagina en
+vijf hoofdstukken (I–V) op bosgroen, navy en cognacleer, foto's ingelijst als platen, haar ervaring
+op leren kaarten en een visitekaartje om af te sluiten.
 
 Gebouwd met [Nuxt 4](https://nuxt.com) (Vue 3), naar het model van simplepark-web-v3 en poespasser-web.
 
@@ -26,11 +27,17 @@ npm run dev        # http://localhost:3000
 
 ## Structuur
 
-- `app/app.vue` — de pagina
-- `app/components/HandwrittenName.vue` — de naam als SVG-lettercontouren, letter voor letter onthuld met CSS
-- `app/constants/signature.ts` — de contouren, gegenereerd met `npm run signature` uit `scripts/fonts/` (Mrs Saint Delafield, OFL)
-- `app/constants/profile.ts` — naam, functie, locatie, e-mail, LinkedIn
-- `app/assets/css/main.css` — kleuren, fonts en de vaste (niet-scrollende) body
+- `app/app.vue` — de pagina: header, de secties en de footer, plus title en deeltags
+- `app/components/sections/` — de titelpagina, de intro en de hoofdstukken I–V
+- `app/components/` — de bouwstenen: `FramedPlate` (foto in passe-partout), `ChapterHead`,
+  `RegisterEntry` (leren kaart), `CallingCard`, `Monogram`, `SiteHeader` en `SiteFooter`
+- `app/constants/profile.ts` — naam, tagline, e-mail, LinkedIn, fotocredit en de ervaring
+- `app/constants/photos.ts` — de vijf foto's in `public/photos/` (webp met jpg-fallback) met alt-teksten
+- `app/plugins/reveal.client.ts` — blokken die bij het scrollen in beeld komen (niet bij reduced motion)
+- `app/assets/css/main.css` — kleuren, fonts, texturen en de gedeelde stijlen
+- `public/og.jpg` — de deelafbeelding (1200 × 630)
+- `app/components/HandwrittenName.vue`, `HoofTrail.vue` en `app/constants/signature.ts` — van de
+  eerste versie (de geschreven naam); staan niet meer op de pagina
 - `server/routes/` — `robots.txt` en `sitemap.xml`, gebouwd op `NUXT_PUBLIC_SITE_URL`
 - `server/plugins/pm2-ready.ts` — meldt PM2 dat de server luistert (zie hieronder)
 

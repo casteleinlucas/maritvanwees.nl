@@ -4,7 +4,7 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/fonts'],
 
-  // flat component names regardless of subfolder: `<HandwrittenName>`, not `<HeroHandwrittenName>`
+  // flat component names regardless of subfolder: `<HeroSection>`, not `<SectionsHeroSection>`
   components: [{ path: '~/components', pathPrefix: false }],
 
   // one static page: prerender it so it ships as plain html
@@ -32,25 +32,30 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'nl' },
-      title: 'Marit van Wees',
+      // the title, description and share tags are set from constants/profile.ts in app.vue
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-        {
-          name: 'description',
-          content: 'Marit van Wees — eigenaar van Vlot Vooruit, Oosterhout (Noord-Brabant).',
-        },
-        { name: 'theme-color', content: '#deede7' },
+        // the forest green of the page, so the browser's bar runs into it
+        { name: 'theme-color', content: '#12241c' },
       ],
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],
     },
   },
 
   fonts: {
-    // google provider; @nuxt/fonts generates the @font-face rules with subsetting + preload.
-    // the signature itself is not a web font: a fixed svg of pen strokes (constants/signature.ts)
+    // google provider; @nuxt/fonts generates the @font-face rules with subsetting + preload
     families: [
-      // the details under the signature: a light sans with wide tracking, bold for the title
-      { name: 'Lato', provider: 'google', weights: [300, 700] },
+      // the name, the chapter titles and the monogram
+      { name: 'Libre Caslon Display', provider: 'google', weights: [400] },
+      // the text, with its italic for the taglines
+      {
+        name: 'EB Garamond',
+        provider: 'google',
+        weights: [400, 500],
+        styles: ['normal', 'italic'],
+      },
+      // engraved caps for the labels and the navigation
+      { name: 'Marcellus SC', provider: 'google', weights: [400] },
     ],
   },
 })
