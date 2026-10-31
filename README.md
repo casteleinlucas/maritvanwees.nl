@@ -40,15 +40,9 @@ for canonical links, Open Graph tags, the sitemap and `robots.txt`.
 
 ## Deployment
 
-The site runs as a Node server behind a reverse proxy, managed by PM2:
-
-```bash
-npm ci
-npm run build
-pm2 startOrReload ecosystem.config.cjs
-```
-
-`ecosystem.config.cjs` sets the port and the public environment variables.
+The site is deployed with [Coolify](https://coolify.io) using the Docker Compose build pack and
+`docker-compose.coolify.yml`. The container runs the Node server on port 8080, so the domains in
+Coolify include that port (`http://maritvanwees.nl:8080`).
 
 To try a production build locally with Docker:
 
