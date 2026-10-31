@@ -1,23 +1,36 @@
 <script setup lang="ts">
-import type { Photo } from '@/constants/photos'
+import { PHOTO_WIDTHS, PORTRAIT_WIDTHS, type Photo } from '@/constants/photos'
 
 // a photo framed as a plate: a linen passe-partout with a pale bevel round the window and brass
 // corner protectors, as on a leather case
 const props = withDefaults(
   defineProps<{
     photo: Photo
-    // the window's shape: wide for the title page, 4:5 or square in the chapters
-    shape?: 'hero' | 'portrait' | 'square'
+    // the window's shape: the title page's (wide on a tablet, upright on a phone and as the
+    // desktop frontispiece, from the photo's own 4:5 crop), or 4:5, 1:1 or 3:2 in the chapters
+    shape?: 'hero' | 'portrait' | 'square' | 'landscape'
     // which part of the photo the window shows; keeps heads whole and logos outside
     crop?: string
-    // a warm grade so the arena photos sit with the forest shoot; strong tames the bright poles
-    grade?: 'none' | 'warm' | 'strong'
+    // how wide the photo is drawn, for the srcset. with object-fit: cover that is wider than the
+    // window when the window is narrower than 3:2: ×1.875 for 4:5, ×1.5 for a square
+    sizes: string
+    // a warm, slightly muted grade so the arena photos sit with the gold of the forest shoot
+    grade?: 'none' | 'sport'
     eager?: boolean
   }>(),
   { shape: 'portrait', crop: '50% 50%', grade: 'none', eager: false },
 )
 
-const src = computed(() => `/photos/${props.photo.file}`)
+const base = computed(() => `/photos/${props.photo.file}`)
+
+function srcset(name: string, widths: readonly number[], extension: 'avif' | 'webp') {
+  return widths.map((width) => `${name}-${width}.${extension} ${width}w`).join(', ')
+}
+
+// the upright crop is drawn at the window's own width: about the screen on a phone, the
+// frontispiece's column (26rem) on a desktop
+const PORTRAIT_MEDIA = '(max-width: 37.49rem), (min-width: 64rem)'
+const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
 </script>
 
 <template>
@@ -25,9 +38,24 @@ const src = computed(() => `/photos/${props.photo.file}`)
     <div class="plate__mat">
       <div class="plate__window">
         <picture>
-          <source type="image/webp" :srcset="`${src}.webp`" />
+          <template v-if="shape === 'hero'">
+            <source
+              type="image/avif"
+              :media="PORTRAIT_MEDIA"
+              :srcset="srcset(`${base}-staand`, PORTRAIT_WIDTHS, 'avif')"
+              :sizes="PORTRAIT_SIZES"
+            />
+            <source
+              type="image/webp"
+              :media="PORTRAIT_MEDIA"
+              :srcset="srcset(`${base}-staand`, PORTRAIT_WIDTHS, 'webp')"
+              :sizes="PORTRAIT_SIZES"
+            />
+          </template>
+          <source type="image/avif" :srcset="srcset(base, PHOTO_WIDTHS, 'avif')" :sizes="sizes" />
+          <source type="image/webp" :srcset="srcset(base, PHOTO_WIDTHS, 'webp')" :sizes="sizes" />
           <img
-            :src="`${src}.jpg`"
+            :src="`${base}-1280.webp`"
             :width="photo.width"
             :height="photo.height"
             :alt="photo.alt"
@@ -54,32 +82,31 @@ const src = computed(() => `/photos/${props.photo.file}`)
     0 0 0 1px rgba(0, 0, 0, 0.35);
 }
 
-/* the brass corners: eight short bars, two per corner */
+/* the brass corners, on the frame itself: two burnished bars per corner */
 .plate::before {
-  --c: var(--brass-400);
-  --l: 26px;
-  --w: 2px;
+  --brass: linear-gradient(135deg, #e9d39e, #b48c45 55%, #7d5c27);
+  --l: 28px;
+  --w: 3px;
   content: '';
   position: absolute;
-  inset: -5px;
+  inset: -1px;
   z-index: 2;
   background:
-    linear-gradient(var(--c), var(--c)) left top / var(--l) var(--w) no-repeat,
-    linear-gradient(var(--c), var(--c)) left top / var(--w) var(--l) no-repeat,
-    linear-gradient(var(--c), var(--c)) right top / var(--l) var(--w) no-repeat,
-    linear-gradient(var(--c), var(--c)) right top / var(--w) var(--l) no-repeat,
-    linear-gradient(var(--c), var(--c)) left bottom / var(--l) var(--w) no-repeat,
-    linear-gradient(var(--c), var(--c)) left bottom / var(--w) var(--l) no-repeat,
-    linear-gradient(var(--c), var(--c)) right bottom / var(--l) var(--w) no-repeat,
-    linear-gradient(var(--c), var(--c)) right bottom / var(--w) var(--l) no-repeat;
+    var(--brass) left top / var(--l) var(--w) no-repeat,
+    var(--brass) left top / var(--w) var(--l) no-repeat,
+    var(--brass) right top / var(--l) var(--w) no-repeat,
+    var(--brass) right top / var(--w) var(--l) no-repeat,
+    var(--brass) left bottom / var(--l) var(--w) no-repeat,
+    var(--brass) left bottom / var(--w) var(--l) no-repeat,
+    var(--brass) right bottom / var(--l) var(--w) no-repeat,
+    var(--brass) right bottom / var(--w) var(--l) no-repeat;
   pointer-events: none;
 }
 
 .plate__mat {
   position: relative;
   isolation: isolate;
-  padding: clamp(14px, 3vw, 40px);
-  border: 1px solid var(--line-soft);
+  padding: clamp(12px, 1.8vw, 26px);
   background: var(--forest-700);
 }
 
@@ -130,7 +157,7 @@ const src = computed(() => `/photos/${props.photo.file}`)
 }
 
 .plate--portrait {
-  width: min(100%, 25rem);
+  width: min(100%, 30rem);
 }
 
 .plate--portrait .plate__window {
@@ -141,26 +168,29 @@ const src = computed(() => `/photos/${props.photo.file}`)
   aspect-ratio: 1 / 1;
 }
 
-.plate--grade-warm img {
-  filter: saturate(0.88) sepia(0.06) contrast(1.02);
+.plate--landscape .plate__window {
+  aspect-ratio: 3 / 2;
 }
 
-.plate--grade-strong img {
-  filter: saturate(0.74) sepia(0.12) contrast(1.03) brightness(0.97);
+.plate--grade-sport img {
+  filter: saturate(0.72) sepia(0.14) contrast(1.04) brightness(0.96);
 }
 
-/* on a phone the title page's plate stands upright, on marit and co */
-@media (max-width: 37.49rem) {
+/* on a phone and as the desktop frontispiece the title page's plate stands upright; the photo
+   is then its own 4:5 crop, so it fills the window as it is */
+@media (max-width: 37.49rem), (min-width: 64rem) {
   .plate--hero .plate__window {
     aspect-ratio: 4 / 5;
   }
 
   .plate--hero img {
-    object-position: 38% 50%;
+    object-position: 50% 50%;
   }
+}
 
+@media (max-width: 37.49rem) {
   .plate::before {
-    --l: 18px;
+    --l: 20px;
   }
 }
 
@@ -171,6 +201,25 @@ const src = computed(() => `/photos/${props.photo.file}`)
 
   .plate--hero img {
     animation: settle 3.2s var(--ease) 0.55s both;
+  }
+
+  /* in the chapters the frame is there at once and the photo develops in it */
+  .reveal-on .plate[data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .reveal-on .plate[data-reveal] img {
+    opacity: 0;
+    transform: scale(1.04);
+    transition:
+      opacity 1.4s var(--ease) var(--reveal-delay, 0s),
+      transform 2.4s var(--ease) var(--reveal-delay, 0s);
+  }
+
+  .reveal-on .plate[data-reveal].is-visible img {
+    opacity: 1;
+    transform: none;
   }
 }
 </style>

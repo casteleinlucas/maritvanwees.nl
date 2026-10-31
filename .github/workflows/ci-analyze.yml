@@ -40,3 +40,18 @@ jobs:
       # what make auto-imported composables and components resolvable.
       - name: Check types
         run: npm run typecheck
+
+      # lint and types don't catch a broken prerender or a font download that fails; that only
+      # showed at the deploy. build here, start the server and check the routes that matter
+      - name: Build
+        run: npm run build
+
+      - name: Smoke test
+        run: |
+          PORT=3010 node .output/server/index.mjs &
+          for _ in $(seq 1 30); do curl -sf http://127.0.0.1:3010/ > /dev/null && break; sleep 1; done
+          status() { curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:3010$1"; }
+          test "$(status /)" = 200
+          test "$(status /robots.txt)" = 200
+          test "$(status /sitemap.xml)" = 200
+          test "$(status /bestaat-niet)" = 404

@@ -1,6 +1,13 @@
+// the widths every photo is published at, as avif and webp (scripts/generate-photos.mjs makes
+// them from the originals in scripts/photos/; keep the two lists the same)
+export const PHOTO_WIDTHS = [640, 960, 1280, 1600] as const
+// the title page's photo also comes as an upright 4:5 crop, at these widths
+export const PORTRAIT_WIDTHS = [640, 960] as const
+
 export interface Photo {
-  // the name in public/photos, served as webp with a jpg of the same name as the fallback
+  // the name in public/photos, before `-<width>.<avif|webp>`
   file: string
+  // the original's size, for the img's width and height (its aspect ratio)
   width: number
   height: number
   alt: string

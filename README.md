@@ -23,7 +23,7 @@ npm run dev        # http://localhost:3000
 | `npm run typecheck` | vue-tsc typecheck                        |
 | `npm run lint`      | eslint (`lint:fix` repareert)            |
 | `npm run format`    | prettier (`format:check` alleen checken) |
-| `npm run signature` | naam opnieuw naar SVG-paden omzetten     |
+| `npm run photos`    | foto's opnieuw naar webversies omzetten  |
 
 ## Structuur
 
@@ -32,12 +32,14 @@ npm run dev        # http://localhost:3000
 - `app/components/` — de bouwstenen: `FramedPlate` (foto in passe-partout), `ChapterHead`,
   `RegisterEntry` (leren kaart), `CallingCard`, `Monogram`, `SiteHeader` en `SiteFooter`
 - `app/constants/profile.ts` — naam, tagline, e-mail, LinkedIn, fotocredit en de ervaring
-- `app/constants/photos.ts` — de vijf foto's in `public/photos/` (webp met jpg-fallback) met alt-teksten
+- `app/constants/photos.ts` — de vijf foto's met alt-teksten. De originelen staan in `scripts/photos/`;
+  `npm run photos` maakt er `public/photos/` van, in vier breedtes als avif en webp, plus een staande
+  uitsnede van de hoofdfoto. Daarna kiest de browser via `srcset` zelf het kleinste bestand dat past
 - `app/plugins/reveal.client.ts` — blokken die bij het scrollen in beeld komen (niet bij reduced motion)
 - `app/assets/css/main.css` — kleuren, fonts, texturen en de gedeelde stijlen
-- `public/og.jpg` — de deelafbeelding (1200 × 630)
-- `app/components/HandwrittenName.vue`, `HoofTrail.vue` en `app/constants/signature.ts` — van de
-  eerste versie (de geschreven naam); staan niet meer op de pagina
+- `app/error.vue` — de 404 (elk adres behalve `/`), in dezelfde stijl
+- `public/og.jpg` — de deelafbeelding (1200 × 630); `public/apple-touch-icon.png`, `icon-*.png` en
+  `site.webmanifest` — het monogram als icoon
 - `server/routes/` — `robots.txt` en `sitemap.xml`, gebouwd op `NUXT_PUBLIC_SITE_URL`
 - `server/plugins/pm2-ready.ts` — meldt PM2 dat de server luistert (zie hieronder)
 

@@ -1,16 +1,21 @@
 <script setup lang="ts">
 // a chapter's title: a roman numeral between two rules, the english kicker in engraved caps and
-// the title in caslon. the kicker and title together are the h2
-defineProps<{
-  id: string
-  numeral: string
-  kicker: string
-  title: string
-}>()
+// the title in caslon. the kicker and title together are the h2. `light` is for the chapter
+// printed on parchment: ink and dark brass instead of cream and brass
+withDefaults(
+  defineProps<{
+    id: string
+    numeral: string
+    kicker: string
+    title: string
+    tone?: 'dark' | 'light'
+  }>(),
+  { tone: 'dark' },
+)
 </script>
 
 <template>
-  <header class="chapter-head" data-reveal>
+  <header class="chapter-head" :class="`chapter-head--${tone}`" data-reveal>
     <p class="chapter-head__numeral" aria-hidden="true">{{ numeral }}</p>
     <h2 :id="id" lang="en">
       <span class="chapter-head__kicker">{{ kicker }}</span>
@@ -63,8 +68,16 @@ defineProps<{
   display: block;
   color: var(--cream-100);
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 1.35rem + 3.4vw, 4.25rem);
+  font-size: clamp(2.5rem, 1.35rem + 3.4vw, 4.25rem);
   line-height: 1.06;
   text-wrap: balance;
+}
+.chapter-head--light .chapter-head__numeral,
+.chapter-head--light .chapter-head__kicker {
+  color: var(--brass-ink);
+}
+
+.chapter-head--light .chapter-head__title {
+  color: var(--ink);
 }
 </style>

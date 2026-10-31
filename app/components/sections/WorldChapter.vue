@@ -2,10 +2,10 @@
 import { PHOTOS } from '@/constants/photos'
 </script>
 
-<!-- IV. a world i know: the sport photos as a pair of plates, her text as a two-column spread,
-     and the line that sums her up on a stitched leather strap across the page -->
+<!-- IV. a world i know: the sport photos as an uneven pair of plates, her text as a two-column
+     spread, and the line that sums her up on a stitched leather strap across the page -->
 <template>
-  <section id="world" class="chapter world seamed" aria-labelledby="world-title">
+  <section id="world" class="chapter world seamed" tabindex="-1" aria-labelledby="world-title">
     <ChapterHead
       id="world-title"
       numeral="IV"
@@ -21,10 +21,22 @@ import { PHOTOS } from '@/constants/photos'
     </div>
 
     <div class="diptych">
-      <!-- the strong grade tames the bright poles; the photographer's signature stays in view -->
-      <FramedPlate :photo="PHOTOS.jump" shape="square" crop="66% 50%" grade="strong" data-reveal />
+      <!-- the jump whole, the photographer's signature in view; the grade tames the bright poles -->
+      <FramedPlate
+        :photo="PHOTOS.jump"
+        shape="landscape"
+        grade="sport"
+        sizes="(max-width: 39.99rem) 86vw, 640px"
+        data-reveal
+      />
       <!-- from the top and the left: her head whole, the jump wing with its logo outside -->
-      <FramedPlate :photo="PHOTOS.riding" shape="square" crop="20% 0%" grade="warm" data-reveal />
+      <FramedPlate
+        :photo="PHOTOS.riding"
+        crop="20% 0%"
+        grade="sport"
+        sizes="(max-width: 39.99rem) 160vw, 640px"
+        data-reveal
+      />
     </div>
 
     <div class="spread" data-reveal>
@@ -69,20 +81,18 @@ import { PHOTOS } from '@/constants/photos'
   width: 100%;
 }
 
+/* the jump wide and the portrait narrow, so the pair reads as one spread, not two tiles */
 @media (min-width: 40rem) {
   .diptych {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.85fr 1fr;
+    align-items: center;
   }
 }
 
-/* two columns with a rule between; each paragraph stays whole in its column */
+/* two columns with a rule between, the text flowing on so both columns end level */
 .spread {
   max-width: 62rem;
   margin: clamp(2.5rem, 5vw, 3.75rem) auto 0;
-}
-
-.spread p {
-  break-inside: avoid;
 }
 
 @media (min-width: 48rem) {
@@ -111,14 +121,22 @@ import { PHOTOS } from '@/constants/photos'
   bottom: 12px;
   left: 0;
   right: 0;
-  background-color: var(--stitch);
-  -webkit-mask:
-    var(--tex-stitch-h) left top / 12px 6px repeat-x,
-    var(--tex-stitch-h) left bottom / 12px 6px repeat-x;
-  mask:
-    var(--tex-stitch-h) left top / 12px 6px repeat-x,
-    var(--tex-stitch-h) left bottom / 12px 6px repeat-x;
+  background:
+    var(--stitch-h) 0 0 / 9px 6px space no-repeat,
+    var(--stitch-h) 0 100% / 9px 6px space no-repeat;
   pointer-events: none;
+}
+
+/* sewn on as the strap comes into view, like the seams (main.css) */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-on .strap::after {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1.8s steps(56) 0.3s;
+  }
+
+  .reveal-on .strap.is-visible::after {
+    clip-path: inset(0);
+  }
 }
 
 .strap__statement {
@@ -136,5 +154,13 @@ import { PHOTOS } from '@/constants/photos'
   font-family: var(--font-text);
   font-style: italic;
   white-space: nowrap;
+}
+
+/* the punchline on a line of its own, so it lands */
+@media (min-width: 48rem) {
+  .strap__statement em {
+    display: block;
+    margin-top: 0.15em;
+  }
 }
 </style>

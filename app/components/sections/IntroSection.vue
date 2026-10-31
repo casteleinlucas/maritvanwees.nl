@@ -1,11 +1,13 @@
-<!-- who she is, in her own words, signed off with her motto between two rows of stitching -->
+<!-- who she is, in her own words, opened with a lead-in in engraved caps and signed off with her
+     motto between two rows of stitching -->
 <template>
   <section class="intro" aria-labelledby="intro-title">
     <h2 id="intro-title" class="visually-hidden">Over Marit</h2>
     <div class="measure" data-reveal>
-      <p class="lead intro__first">
-        Ik ben Marit van Wees, een ondernemende marketing- en salesprofessional met een sterke
-        affiniteit met de internationale paardenbranche.
+      <p class="lead">
+        <span class="intro__lead-in">Ik ben Marit van Wees,</span> een ondernemende
+        <span class="nowrap">marketing- en salesprofessional</span> met een sterke affiniteit met de
+        internationale paardenbranche.
       </p>
       <p>
         Paarden zijn voor mij veel meer dan een hobby. Door mijn jarenlange betrokkenheid bij de
@@ -31,27 +33,28 @@
   padding: 0 var(--gutter) clamp(4rem, 2.5rem + 5vw, 7rem);
 }
 
-/* a drop cap in brass caslon on the opening line */
-.intro__first::first-letter {
-  float: left;
-  margin: 0.07em 0.14em 0 0;
-  color: var(--brass-400);
-  font-family: var(--font-display);
-  font-size: 3.25em;
-  line-height: 0.8;
+/* the opening words in brass engraved caps, as a register's first entry begins */
+.intro__lead-in {
+  color: var(--brass-300);
+  font-family: var(--font-caps);
+  font-size: 0.86em;
+  letter-spacing: 0.06em;
 }
 
+/* the motto, engraved: caps between two rows of stitches, not another italic line */
 .signoff {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
-  max-width: 46rem;
+  gap: 1.5rem;
+  max-width: 48rem;
   margin: clamp(2.75rem, 5vw, 4rem) auto 0;
   color: var(--brass-300);
-  font-size: clamp(1.3rem, 1.1rem + 0.9vw, 1.75rem);
-  font-style: italic;
-  line-height: 1.3;
+  font-family: var(--font-caps);
+  font-size: clamp(0.85rem, 0.78rem + 0.3vw, 1rem);
+  letter-spacing: 0.22em;
+  line-height: 1.6;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .signoff::before,
@@ -60,10 +63,7 @@
   flex: 1;
   min-width: 1.5rem;
   height: 6px;
-  background-color: var(--stitch);
-  -webkit-mask: var(--tex-stitch-h) left center / 12px 6px repeat-x;
-  mask: var(--tex-stitch-h) left center / 12px 6px repeat-x;
-  opacity: 0.8;
+  background: var(--stitch-h) 0 50% / 9px 6px space no-repeat;
 }
 
 @media (max-width: 37.49rem) {

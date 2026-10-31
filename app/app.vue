@@ -5,13 +5,36 @@ import { PROFILE } from '@/constants/profile'
 // the page is a saddler's register: a title page, five chapters with roman numerals, photos
 // framed as plates, the experience on leather cards and a calling card to close
 
+// there are no pages, so without this every address would answer 200 with the home page.
+// error.vue shows the 404
+if (import.meta.server && useRequestURL().pathname !== '/') {
+  throw createError({ statusCode: 404, statusMessage: 'Pagina niet gevonden', fatal: true })
+}
+
 // the page's own address for search engines and shared links
 const siteUrl = withoutTrailingSlash(useRuntimeConfig().public.siteUrl)
+
+// who the page is about, for search engines: ties the site to her linkedin when someone
+// searches her name
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: PROFILE.name,
+  url: siteUrl,
+  image: `${siteUrl}/og.jpg`,
+  description: PROFILE.description,
+  jobTitle: PROFILE.jobTitle,
+  worksFor: { '@type': 'Organization', name: PROFILE.employer },
+  affiliation: { '@type': 'CollegeOrUniversity', name: PROFILE.school },
+  sameAs: [PROFILE.linkedin],
+}
+
 useHead({
-  title: `${PROFILE.name} · ${PROFILE.tagline}`,
+  title: PROFILE.searchTitle,
   link: [{ rel: 'canonical', href: siteUrl }],
   // "terug naar boven" and the monogram link here
   bodyAttrs: { id: 'top' },
+  script: [{ type: 'application/ld+json', innerHTML: JSON.stringify(person) }],
 })
 useSeoMeta({
   description: PROFILE.description,
@@ -24,7 +47,7 @@ useSeoMeta({
   ogImage: `${siteUrl}/og.jpg`,
   ogImageWidth: 1200,
   ogImageHeight: 630,
-  ogImageAlt: 'Marit van Wees in een zonovergoten bos naast haar paard Co.',
+  ogImageAlt: 'De naam Marit van Wees met haar tagline, naast een foto van haar met haar paard Co.',
   twitterCard: 'summary_large_image',
 })
 </script>

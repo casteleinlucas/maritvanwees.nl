@@ -1,10 +1,12 @@
 <!-- the mvw monogram: caslon capitals with an italic v, in a double ring with a stitched ring
-     inside. decorative only; the name always stands in text next to or under it -->
+     inside (`.monogram__stitch`, left out where the mark is small). decorative only; the name
+     always stands in text next to or under it -->
 <template>
   <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">
     <circle cx="60" cy="60" r="58.5" fill="none" stroke="currentColor" stroke-width="1.1" />
     <circle cx="60" cy="60" r="55" fill="none" stroke="currentColor" stroke-width=".55" />
     <circle
+      class="monogram__stitch"
       cx="60"
       cy="60"
       r="49.5"

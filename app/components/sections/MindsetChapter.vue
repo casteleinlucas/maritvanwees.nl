@@ -1,10 +1,16 @@
-<!-- II. my mindset, on a navy panel: her view on growth, the three values between double
-     rules, and what she wants to understand -->
+<!-- II. my mindset, printed on parchment like a page of the register: her view on growth, the
+     three values between double rules, and what she wants to understand -->
 <template>
-  <section id="mindset" class="chapter mindset seamed" aria-labelledby="mindset-title">
+  <section
+    id="mindset"
+    class="chapter mindset seamed"
+    tabindex="-1"
+    aria-labelledby="mindset-title"
+  >
     <ChapterHead
       id="mindset-title"
       numeral="II"
+      tone="light"
       kicker="My Mindset"
       title="Driven to learn. Determined to grow."
     />
@@ -48,21 +54,27 @@
 .mindset {
   background:
     var(--tex-grain-soft) 0 0 / 240px 240px,
-    var(--navy-800);
-  background-blend-mode: soft-light;
+    var(--parchment);
+  background-blend-mode: multiply;
+  color: var(--ink);
+}
+
+/* the seam into the parchment is sewn in brown thread */
+.mindset.seamed::before {
+  background-image: var(--stitch-h-ink);
 }
 
 .values {
   max-width: 60rem;
   margin: clamp(3rem, 6vw, 4.5rem) auto;
   padding: clamp(2.25rem, 4.5vw, 3.25rem) clamp(0.5rem, 3vw, 2.5rem);
-  border-block: 3px double var(--line);
+  border-block: 3px double rgba(106, 78, 29, 0.5);
   text-align: center;
 }
 
 .values__intro {
   margin-bottom: 1.6rem;
-  color: var(--brass-400);
+  color: var(--brass-ink);
   font-family: var(--font-caps);
   font-size: 0.82rem;
   letter-spacing: 0.24em;
@@ -78,7 +90,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  color: var(--cream-100);
+  color: var(--ink);
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.9rem);
   line-height: 1.15;
@@ -95,20 +107,17 @@
   flex: none;
   width: 7px;
   height: 7px;
-  border: 1px solid var(--brass-400);
+  border: 1px solid var(--brass-ink);
   transform: rotate(45deg);
 }
 
 .values__outro {
   max-width: 34rem;
   margin: 1.75rem auto 0;
-  color: var(--cream-300);
-  font-style: italic;
 }
 
 .mindset__closing {
   font-size: 1.18em;
-  font-style: italic;
   line-height: 1.5;
   text-align: center;
 }

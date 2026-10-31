@@ -1,15 +1,16 @@
 <script setup lang="ts">
-// the header: the monogram with the chapter links set symmetrically round it on a desktop. below
-// 60rem the links move behind a menu button, but only once js runs (`isHydrated`): without it
-// they simply stand as a row
-const LINKS = [
-  { href: '#connection', label: 'Connection' },
-  { href: '#mindset', label: 'Mindset' },
-  { href: '#experience', label: 'Experience' },
-  { href: '#connect', label: 'Connect' },
+// the header: the monogram with chapters I–IV set symmetrically round it, and a contact button
+// at the right. below 60rem the chapters, and V as "contact", move into a contents page behind a
+// menu button. that switch is css (`scripting: enabled`), not a class set on hydration, so the
+// header has its final layout from the first paint and nothing moves when the js arrives
+const CHAPTERS = [
+  { href: '#connection', numeral: 'I', label: 'Connection' },
+  { href: '#mindset', numeral: 'II', label: 'Mindset' },
+  { href: '#experience', numeral: 'III', label: 'Experience' },
+  { href: '#world', numeral: 'IV', label: 'World' },
+  { href: '#connect', numeral: 'V', label: 'Contact' },
 ]
 
-const isHydrated = ref(false)
 const isOpen = ref(false)
 const toggle = useTemplateRef<HTMLButtonElement>('toggle')
 const nav = useTemplateRef<HTMLElement>('nav')
@@ -18,7 +19,7 @@ function setOpen(open: boolean, returnFocus = false) {
   isOpen.value = open
   document.documentElement.classList.toggle('menu-open', open)
   // while the menu covers the page, the page behind it can't be reached
-  for (const outside of document.querySelectorAll<HTMLElement>('#main, .site-footer')) {
+  for (const outside of document.querySelectorAll<HTMLElement>('.skip-link, #main, .site-footer')) {
     outside.inert = open
   }
 
@@ -27,6 +28,27 @@ function setOpen(open: boolean, returnFocus = false) {
   } else if (returnFocus) {
     toggle.value?.focus()
   }
+}
+
+// from the open menu, jump once it has closed: while it is open the page can't scroll, and a
+// jump the browser starts then never lands (seen with the keyboard). focus moves to the chapter
+function goTo(event: MouseEvent, href: string) {
+  if (!isOpen.value) {
+    return
+  }
+
+  event.preventDefault()
+  setOpen(false)
+  setTimeout(() => {
+    const target = document.querySelector<HTMLElement>(href)
+    if (!target) {
+      return
+    }
+
+    history.pushState(null, '', href)
+    target.scrollIntoView({ behavior: 'instant' })
+    target.focus({ preventScroll: true })
+  })
 }
 
 function onKeydown(event: KeyboardEvent) {
@@ -45,7 +67,6 @@ function onBreakpoint(event: MediaQueryListEvent) {
 let desktop: MediaQueryList | undefined
 
 onMounted(() => {
-  isHydrated.value = true
   desktop = window.matchMedia('(min-width: 60rem)')
   desktop.addEventListener('change', onBreakpoint)
   document.addEventListener('keydown', onKeydown)
@@ -58,12 +79,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <header class="site-header" :class="{ 'site-header--js': isHydrated }">
+  <header class="site-header">
     <div class="site-header__inner">
       <a class="brand" href="#top">
         <Monogram class="brand__mark" />
         <span class="visually-hidden">Marit van Wees, naar het begin van de pagina</span>
       </a>
+      <a class="contact" href="#connect">Contact</a>
       <button
         ref="toggle"
         class="menu-toggle"
@@ -80,13 +102,16 @@ onBeforeUnmount(() => {
         ref="nav"
         class="site-nav"
         :class="{ 'site-nav--open': isOpen }"
-        aria-label="Hoofdmenu"
+        aria-label="Hoofdstukken"
       >
-        <ul class="site-nav__list" lang="en">
-          <li v-for="link in LINKS" :key="link.href">
-            <a :href="link.href" @click="isOpen && setOpen(false)">{{ link.label }}</a>
+        <ol class="site-nav__list" lang="en">
+          <li v-for="chapter in CHAPTERS" :key="chapter.href" class="site-nav__item">
+            <a :href="chapter.href" @click="goTo($event, chapter.href)">
+              <span class="site-nav__numeral" aria-hidden="true">{{ chapter.numeral }}</span>
+              {{ chapter.label }}
+            </a>
           </li>
-        </ul>
+        </ol>
       </nav>
     </div>
   </header>
@@ -99,24 +124,21 @@ onBeforeUnmount(() => {
 }
 
 .site-header__inner {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem 1rem;
   max-width: var(--wide);
   margin: 0 auto;
   padding: 1.1rem var(--gutter);
-}
-
-.site-header:not(.site-header--js) .site-header__inner {
-  justify-content: center;
 }
 
 .brand {
   position: relative;
   z-index: 2;
   display: inline-flex;
+  margin-right: auto;
   color: var(--brass-400);
   border-radius: 50%;
   transition: color 0.3s ease;
@@ -131,16 +153,40 @@ onBeforeUnmount(() => {
   height: 58px;
 }
 
+/* the contact button: the one framed element in the header */
+.contact {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.55rem 1.05rem 0.55rem 1.25rem;
+  border: 1px solid var(--line);
+  color: var(--cream-100);
+  font-family: var(--font-caps);
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.contact:hover {
+  border-color: var(--brass-400);
+  color: var(--brass-300);
+}
+
 .menu-toggle {
   position: relative;
   z-index: 2;
   display: none;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
   min-height: 44px;
-  padding: 0.6rem 1rem 0.6rem 1.15rem;
-  border: 1px solid var(--line);
-  border-radius: 0;
+  padding: 0.6rem 0.25rem 0.6rem 0.75rem;
+  border: 0;
   background: transparent;
   color: var(--cream-100);
   font: inherit;
@@ -152,7 +198,7 @@ onBeforeUnmount(() => {
 }
 
 .menu-toggle:hover {
-  border-color: var(--brass-400);
+  color: var(--brass-300);
 }
 
 .menu-toggle__icon {
@@ -208,7 +254,9 @@ onBeforeUnmount(() => {
 
 .site-nav a {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6em;
   padding: 0.55rem 0.1rem;
   color: var(--cream-100);
   font-family: var(--font-caps);
@@ -216,6 +264,12 @@ onBeforeUnmount(() => {
   letter-spacing: 0.22em;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+.site-nav__numeral {
+  color: var(--brass-400);
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
 }
 
 .site-nav a::after {
@@ -235,13 +289,30 @@ onBeforeUnmount(() => {
   transform: scaleX(1);
 }
 
-/* phone and tablet: the links become a full-screen menu once js runs */
+/* without js the links stand as a centred row under the monogram */
+@media (scripting: none) {
+  .site-header__inner {
+    justify-content: center;
+  }
+
+  .brand {
+    margin-right: 0;
+  }
+}
+
+/* phone and tablet: a small mark, and the chapters as a contents page behind the menu button */
 @media (max-width: 59.99rem) {
-  .site-header--js .menu-toggle {
+  .brand__mark :deep(.monogram__stitch) {
+    display: none;
+  }
+}
+
+@media (max-width: 59.99rem) and (scripting: enabled) {
+  .menu-toggle {
     display: inline-flex;
   }
 
-  .site-header--js .site-nav {
+  .site-nav {
     position: fixed;
     inset: 0;
     z-index: 1;
@@ -259,40 +330,42 @@ onBeforeUnmount(() => {
       visibility 0s linear 0.35s;
   }
 
-  .site-header--js .site-nav--open {
+  .site-nav--open {
     visibility: visible;
     opacity: 1;
     transition: opacity 0.35s ease;
   }
 
-  .site-header--js .site-nav__list {
+  .site-nav__list {
     flex-direction: column;
-    align-items: center;
-    gap: 1.25rem;
+    align-items: stretch;
+    gap: 0;
+    width: min(100%, 20rem);
   }
 
-  .site-header--js .site-nav__list li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.25rem;
+  .site-nav__item + .site-nav__item {
+    border-top: 1px solid var(--line-soft);
   }
 
-  .site-header--js .site-nav__list li + li::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border: 1px solid var(--brass-400);
-    transform: rotate(45deg);
-  }
-
-  .site-header--js .site-nav a {
+  .site-nav a {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    width: 100%;
+    padding: 1.1rem 0;
     font-size: 1.05rem;
     letter-spacing: 0.24em;
   }
+
+  .site-nav__numeral {
+    font-size: 1.15rem;
+  }
+
+  .site-nav a::after {
+    display: none;
+  }
 }
 
-/* desktop: two links either side of the monogram */
+/* desktop: chapters I–IV either side of the monogram, contact at the right */
 @media (min-width: 60rem) {
   .site-header__inner {
     display: grid;
@@ -308,26 +381,53 @@ onBeforeUnmount(() => {
     grid-column: 1;
   }
 
+  .brand {
+    margin-right: 0;
+  }
+
   .brand__mark {
     width: 84px;
     height: 84px;
+  }
+
+  .contact {
+    position: absolute;
+    top: 50%;
+    right: var(--gutter);
+    translate: 0 -30%;
   }
 
   .site-nav__list {
     display: grid;
     grid-template-columns: 1fr 1fr 8.5rem 1fr 1fr;
     align-items: center;
-    max-width: 54rem;
+    max-width: 52rem;
     margin: 0 auto;
     gap: 0;
   }
 
-  .site-nav__list li {
+  .site-nav__item {
     justify-self: center;
   }
 
-  .site-nav__list li:nth-child(3) {
+  .site-nav__item:nth-child(3) {
     grid-column: 4;
+  }
+
+  /* contact has its own button here */
+  .site-nav__item:last-child {
+    display: none;
+  }
+}
+
+/* on a small laptop the row narrows, so the contact button stays clear of chapter IV */
+@media (min-width: 60rem) and (max-width: 74.99rem) {
+  .site-nav__list {
+    max-width: 40rem;
+  }
+
+  .site-nav a {
+    letter-spacing: 0.16em;
   }
 }
 </style>

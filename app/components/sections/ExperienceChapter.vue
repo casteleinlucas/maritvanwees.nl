@@ -4,7 +4,7 @@ import { EXPERIENCE } from '@/constants/profile'
 
 <!-- III. my experience: the register of where she works and studies, on leather cards -->
 <template>
-  <section id="experience" class="chapter seamed" aria-labelledby="experience-title">
+  <section id="experience" class="chapter seamed" tabindex="-1" aria-labelledby="experience-title">
     <ChapterHead
       id="experience-title"
       numeral="III"
@@ -42,9 +42,11 @@ import { EXPERIENCE } from '@/constants/profile'
   margin: clamp(3rem, 6vw, 4.75rem) auto 0;
 }
 
-@media (min-width: 64rem) {
+/* the cards share these rows through subgrid (RegisterEntry.vue, same breakpoint) */
+@media (min-width: 72rem) {
   .register {
     grid-template-columns: repeat(3, 1fr);
+    row-gap: 0;
     max-width: var(--wide);
   }
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // one entry of the experience register: a leather card with a stitched border inset like the
-// edge of a saddle flap
+// edge of a saddle flap, and a crease pressed in just inside the stitches
 defineProps<{
   numeral: string
   name: string
@@ -11,7 +11,7 @@ defineProps<{
 
 <template>
   <article class="entry leather" data-reveal>
-    <p class="entry__numeral" aria-hidden="true">{{ numeral }}</p>
+    <p class="entry__numeral" aria-hidden="true">Nº {{ numeral }}</p>
     <h3 class="entry__name">{{ name }}</h3>
     <p class="entry__role" lang="en">{{ role }}</p>
     <p class="entry__text">{{ text }}</p>
@@ -21,7 +21,9 @@ defineProps<{
 <style scoped>
 .entry {
   padding: clamp(2.5rem, 4vw, 3.1rem) clamp(1.6rem, 3vw, 2.4rem) clamp(2.25rem, 3.5vw, 2.75rem);
-  border-radius: 3px;
+  border-radius: 6px;
+  outline: 1px solid rgba(0, 0, 0, 0.3);
+  outline-offset: -5px;
   box-shadow:
     inset 0 1px 0 rgba(255, 214, 170, 0.1),
     0 0 0 1px var(--cognac-900),
@@ -32,33 +34,21 @@ defineProps<{
 .entry::after {
   content: '';
   position: absolute;
-  inset: 10px;
-  background-color: var(--stitch);
-  -webkit-mask:
-    var(--tex-stitch-h) left top / 12px 6px repeat-x,
-    var(--tex-stitch-h) left bottom / 12px 6px repeat-x,
-    var(--tex-stitch-v) left top / 6px 12px repeat-y,
-    var(--tex-stitch-v) right top / 6px 12px repeat-y;
-  mask:
-    var(--tex-stitch-h) left top / 12px 6px repeat-x,
-    var(--tex-stitch-h) left bottom / 12px 6px repeat-x,
-    var(--tex-stitch-v) left top / 6px 12px repeat-y,
-    var(--tex-stitch-v) right top / 6px 12px repeat-y;
+  inset: 11px;
+  background:
+    var(--stitch-h) 0 0 / 9px 6px space no-repeat,
+    var(--stitch-h) 0 100% / 9px 6px space no-repeat,
+    var(--stitch-v) 0 0 / 6px 9px no-repeat space,
+    var(--stitch-v) 100% 0 / 6px 9px no-repeat space;
   pointer-events: none;
 }
 
 .entry__numeral {
-  display: grid;
-  place-items: center;
-  width: 2.6rem;
-  height: 2.6rem;
-  margin: 0 auto 1.25rem;
-  border: 1px solid rgba(220, 192, 138, 0.6);
-  border-radius: 50%;
+  margin: 0 0 1.1rem;
   color: var(--brass-300);
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  line-height: 1;
+  font-family: var(--font-caps);
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
 }
 
 .entry__name {
@@ -90,5 +80,20 @@ defineProps<{
 
 .entry__text {
   text-align: left;
+}
+
+/* three in a row (ExperienceChapter.vue): the cards share their rows, so the names sit on one
+   line at the bottom of theirs and the roles and rules line up across the register */
+@media (min-width: 72rem) {
+  .entry {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+  }
+
+  .entry__name {
+    align-self: end;
+  }
 }
 </style>

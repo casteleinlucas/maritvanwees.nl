@@ -2,9 +2,9 @@
 import { PHOTOS } from '@/constants/photos'
 </script>
 
-<!-- V. let's connect: the invitation, and marit with co beside her calling card -->
+<!-- V. let's connect, on navy: the invitation, and marit with co beside her calling card -->
 <template>
-  <section id="connect" class="chapter connect" aria-labelledby="connect-title">
+  <section id="connect" class="chapter connect" tabindex="-1" aria-labelledby="connect-title">
     <ChapterHead
       id="connect-title"
       numeral="V"
@@ -24,7 +24,12 @@ import { PHOTOS } from '@/constants/photos'
     </div>
 
     <div class="connect__pair">
-      <FramedPlate :photo="PHOTOS.forestLeaning" crop="58% 50%" data-reveal />
+      <FramedPlate
+        :photo="PHOTOS.forestLeaning"
+        crop="58% 50%"
+        sizes="(max-width: 37.49rem) 160vw, 720px"
+        data-reveal
+      />
       <CallingCard />
     </div>
   </section>
@@ -34,7 +39,7 @@ import { PHOTOS } from '@/constants/photos'
 .connect {
   background:
     var(--tex-grain-soft) 0 0 / 240px 240px,
-    var(--forest-900);
+    var(--navy-800);
   background-blend-mode: soft-light;
 }
 

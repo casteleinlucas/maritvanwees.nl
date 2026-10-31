@@ -4,7 +4,7 @@ import { PHOTOS } from '@/constants/photos'
 
 <!-- I. the equestrian connection: text, a plate, text -->
 <template>
-  <section id="connection" class="chapter seamed" aria-labelledby="connection-title">
+  <section id="connection" class="chapter seamed" tabindex="-1" aria-labelledby="connection-title">
     <ChapterHead
       id="connection-title"
       numeral="I"
@@ -25,7 +25,13 @@ import { PHOTOS } from '@/constants/photos'
       </div>
 
       <!-- cropped from the top, so her head stays whole and the sponsor banner falls outside -->
-      <FramedPlate :photo="PHOTOS.gallop" crop="42% 0%" grade="warm" data-reveal />
+      <FramedPlate
+        :photo="PHOTOS.gallop"
+        crop="42% 0%"
+        grade="sport"
+        sizes="(max-width: 37.49rem) 160vw, 900px"
+        data-reveal
+      />
 
       <div class="triptych__right" data-reveal>
         <p>
@@ -57,7 +63,7 @@ import { PHOTOS } from '@/constants/photos'
 }
 
 /* tablet: the plate on top, the two texts side by side beneath it */
-@media (min-width: 48rem) and (max-width: 63.99rem) {
+@media (min-width: 48rem) and (max-width: 71.99rem) {
   .triptych {
     grid-template-columns: 1fr 1fr;
     column-gap: 3rem;
@@ -80,9 +86,9 @@ import { PHOTOS } from '@/constants/photos'
   }
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 72rem) {
   .triptych {
-    grid-template-columns: 1fr minmax(19rem, 25rem) 1fr;
+    grid-template-columns: 1fr minmax(22rem, 30rem) 1fr;
     column-gap: clamp(2.5rem, 4.5vw, 4.5rem);
     align-items: center;
   }

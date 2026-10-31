@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { PROFILE } from '@/constants/profile'
 
-// how to reach her, as a calling card on linen paper in an engraved double frame
-const linkedinLabel = PROFILE.linkedin.replace(/^https:\/\/(www\.)?/, '').replace(/\/$/, '')
+// how to reach her, as a calling card on linen paper in an engraved double frame. the linkedin
+// link shows her name rather than the profile's address, which ends in a string of digits
+const mailto = `mailto:${PROFILE.email}?subject=${encodeURIComponent(PROFILE.emailSubject)}`
 </script>
 
 <template>
@@ -14,14 +15,14 @@ const linkedinLabel = PROFILE.linkedin.replace(/^https:\/\/(www\.)?/, '').replac
       <div class="card__row">
         <dt>E-mail</dt>
         <dd>
-          <a :href="`mailto:${PROFILE.email}`">{{ PROFILE.email }}</a>
+          <a :href="mailto">{{ PROFILE.email }}</a>
         </dd>
       </div>
       <div class="card__row">
         <dt>LinkedIn</dt>
         <dd>
           <a :href="PROFILE.linkedin" target="_blank" rel="noopener noreferrer">{{
-            linkedinLabel
+            PROFILE.name
           }}</a>
         </dd>
       </div>
@@ -82,7 +83,6 @@ const linkedinLabel = PROFILE.linkedin.replace(/^https:\/\/(www\.)?/, '').replac
 .card__line {
   margin: 0 0 1.75rem;
   color: var(--cognac-700);
-  font-style: italic;
 }
 
 .card__details {
