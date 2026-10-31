@@ -1,0 +1,25 @@
+---
+# Coolify / Docker Compose deployment for maritvanwees.nl
+#
+# Point the Coolify resource at this file (Docker Compose build pack). The image runs the Nitro
+# server on port 8080, so the domains in Coolify need that port: http://maritvanwees.nl:8080.
+
+x-logging: &default-logging
+  driver: 'json-file'
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    logging: *default-logging
+    environment:
+      NUXT_PUBLIC_SITE_URL: https://maritvanwees.nl
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://127.0.0.1:8080/']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
