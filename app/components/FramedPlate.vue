@@ -73,12 +73,14 @@ const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
 </template>
 
 <style scoped>
+/* the frame takes the colour of the panel it hangs on, a shade lighter for the mat and a shade
+   darker for the frame and the window: forest green by default, navy in the experience chapter */
 .plate {
   position: relative;
   margin: 0 auto;
   padding: 6px;
   border: 1px solid var(--line);
-  background: var(--forest-900);
+  background: var(--plate-ground, var(--forest-900));
   box-shadow:
     0 2.5rem 4rem -2rem rgba(0, 0, 0, 0.7),
     0 0 0 1px rgba(0, 0, 0, 0.35);
@@ -109,7 +111,7 @@ const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
   position: relative;
   isolation: isolate;
   padding: clamp(12px, 1.8vw, 26px);
-  background: var(--forest-700);
+  background: var(--plate-mat, var(--forest-700));
 }
 
 /* the linen weave of the mat */
@@ -130,7 +132,7 @@ const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
   overflow: hidden;
   outline: 1px solid rgba(220, 192, 138, 0.7);
   outline-offset: 5px;
-  background: var(--forest-900);
+  background: var(--plate-ground, var(--forest-900));
 }
 
 .plate__window::after {

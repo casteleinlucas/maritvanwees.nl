@@ -48,6 +48,8 @@ import { EXPERIENCE } from '@/constants/profile'
 <style scoped>
 .experience {
   --panel: var(--navy-800);
+  --plate-mat: var(--navy-700);
+  --plate-ground: var(--navy-900);
 }
 
 .opening {

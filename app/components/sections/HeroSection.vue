@@ -94,7 +94,7 @@ import { PROFILE } from '@/constants/profile'
 }
 
 /* desktop: the photo on the left and the title page beside it, the name on two lines, filling
-   the first screen under the header (about 5.5rem tall) */
+   the first screen under the header (about 6rem tall) */
 @media (min-width: 64rem) {
   .hero {
     display: grid;
@@ -103,7 +103,7 @@ import { PROFILE } from '@/constants/profile'
     align-content: center;
     align-items: center;
     column-gap: clamp(3rem, 6vw, 6.5rem);
-    min-height: calc(100svh - 5.5rem);
+    min-height: calc(100svh - 6rem);
     padding-top: clamp(1.5rem, 4vh, 3rem);
     padding-bottom: clamp(3.5rem, 10vh, 6.5rem);
     margin-bottom: clamp(2rem, 4vw, 4rem);
