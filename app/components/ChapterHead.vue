@@ -1,11 +1,9 @@
 <script setup lang="ts">
-// a chapter's title: a roman numeral between two rules, the english kicker in engraved caps and
-// the title in caslon. the kicker and title together are the h2. `light` is for the chapter
-// printed on parchment: ink and dark brass instead of cream and brass
+// a chapter's title: the english kicker in small caps and the title in caslon, together the h2.
+// `light` is for the chapter on parchment: ink and dark brass instead of cream and brass
 withDefaults(
   defineProps<{
     id: string
-    numeral: string
     kicker: string
     title: string
     tone?: 'dark' | 'light'
@@ -16,7 +14,6 @@ withDefaults(
 
 <template>
   <header class="chapter-head" :class="`chapter-head--${tone}`" data-reveal>
-    <p class="chapter-head__numeral" aria-hidden="true">{{ numeral }}</p>
     <h2 :id="id" lang="en">
       <span class="chapter-head__kicker">{{ kicker }}</span>
       <span class="chapter-head__title">{{ title }}</span>
@@ -26,40 +23,18 @@ withDefaults(
 
 <style scoped>
 .chapter-head {
-  max-width: 54rem;
-  margin: 0 auto clamp(2.75rem, 5vw, 4.5rem);
+  max-width: 48rem;
+  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
   text-align: center;
-}
-
-.chapter-head__numeral {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin: 0 0 1.4rem;
-  color: var(--brass-400);
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  letter-spacing: 0.12em;
-  line-height: 1;
-}
-
-.chapter-head__numeral::before,
-.chapter-head__numeral::after {
-  content: '';
-  width: 2.75rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.6;
 }
 
 .chapter-head__kicker {
   display: block;
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.9rem;
   color: var(--brass-400);
   font-family: var(--font-caps);
-  font-size: clamp(0.78rem, 0.72rem + 0.25vw, 0.9rem);
-  letter-spacing: 0.24em;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
   line-height: 1.5;
   text-transform: uppercase;
 }
@@ -68,11 +43,11 @@ withDefaults(
   display: block;
   color: var(--cream-100);
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 1.35rem + 3.4vw, 4.25rem);
-  line-height: 1.06;
+  font-size: clamp(2.25rem, 1.4rem + 2.8vw, 3.6rem);
+  line-height: 1.08;
   text-wrap: balance;
 }
-.chapter-head--light .chapter-head__numeral,
+
 .chapter-head--light .chapter-head__kicker {
   color: var(--brass-ink);
 }

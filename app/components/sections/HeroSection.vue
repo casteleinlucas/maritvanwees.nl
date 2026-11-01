@@ -1,28 +1,19 @@
 <script setup lang="ts">
 import { PHOTOS } from '@/constants/photos'
 import { PROFILE } from '@/constants/profile'
-
-// the four disciplines read as two pairs, so a wrapped line never starts with a lozenge
-const DISCIPLINE_PAIRS = [PROFILE.disciplines.slice(0, 2), PROFILE.disciplines.slice(2, 4)]
 </script>
 
-<!-- the title page: what she does, her name, the double rule, the tagline and the way to get in
-     touch, with marit and co framed beneath. on a desktop the plate stands beside it instead,
-     like the frontispiece facing an old register's title page, so she is in the first screen -->
+<!-- the title page: what she does, her name, the tagline and the way to get in touch, with marit
+     and co beneath. on a desktop the photo stands beside it, so she is in the first screen -->
 <template>
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero__titlepage">
-      <p class="hero__disciplines" lang="en">
-        <span v-for="(pair, index) in DISCIPLINE_PAIRS" :key="index" class="hero__pair">
-          <span>{{ pair[0] }}</span>
-          <span class="hero__lozenge" aria-hidden="true" />
-          <span>{{ pair[1] }}</span>
-        </span>
-      </p>
+      <ul class="hero__disciplines" lang="en">
+        <li v-for="discipline in PROFILE.disciplines" :key="discipline">{{ discipline }}</li>
+      </ul>
       <h1 id="hero-title" class="hero__name">
         <span class="hero__first">Marit</span> van&nbsp;Wees
       </h1>
-      <div class="ornament" aria-hidden="true"><i /></div>
       <p class="hero__tagline" lang="en">{{ PROFILE.tagline }}</p>
       <a class="hero__contact" href="#connect" lang="en">Let’s connect</a>
     </div>
@@ -48,49 +39,21 @@ const DISCIPLINE_PAIRS = [PROFILE.disciplines.slice(0, 2), PROFILE.disciplines.s
   margin: 0 auto clamp(2.5rem, 5vw, 4.25rem);
 }
 
-/* the four disciplines in engraved caps, a small lozenge between the two of each pair: two
-   lines on a phone and beside the frontispiece, one line (a lozenge between the pairs too) on
-   a tablet */
+/* the four disciplines in small caps; they wrap onto a second line on a phone */
 .hero__disciplines {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.45rem;
-  margin: 0 auto clamp(1.4rem, 3vw, 2.25rem);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem 1.4rem;
+  margin: 0 auto clamp(1.25rem, 2.5vw, 1.75rem);
+  padding: 0;
+  list-style: none;
   color: var(--brass-400);
   font-family: var(--font-caps);
-  font-size: clamp(0.72rem, 0.66rem + 0.25vw, 0.84rem);
-  letter-spacing: 0.24em;
+  font-size: clamp(0.72rem, 0.66rem + 0.25vw, 0.82rem);
+  letter-spacing: 0.2em;
   line-height: 1.5;
   text-transform: uppercase;
-}
-
-.hero__pair {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.1rem;
-  white-space: nowrap;
-}
-
-.hero__lozenge,
-.hero__pair + .hero__pair::before {
-  flex: none;
-  width: 5px;
-  height: 5px;
-  border: 1px solid currentColor;
-  transform: rotate(45deg);
-}
-
-@media (min-width: 37.5rem) and (max-width: 63.99rem) {
-  .hero__disciplines {
-    flex-direction: row;
-    justify-content: center;
-    gap: 1.1rem;
-  }
-
-  .hero__pair + .hero__pair::before {
-    content: '';
-  }
 }
 
 .hero__name {
@@ -102,7 +65,7 @@ const DISCIPLINE_PAIRS = [PROFILE.disciplines.slice(0, 2), PROFILE.disciplines.s
 }
 
 .hero__tagline {
-  margin: 0;
+  margin: clamp(1rem, 2vw, 1.5rem) 0 0;
   color: var(--cream-100);
   font-size: clamp(1.4rem, 1.15rem + 1vw, 2.05rem);
   font-style: italic;
@@ -130,10 +93,8 @@ const DISCIPLINE_PAIRS = [PROFILE.disciplines.slice(0, 2), PROFILE.disciplines.s
   border-color: var(--brass-300);
 }
 
-/* desktop: the frontispiece, the plate on the left and the title page beside it, the name on
-   two lines. it fills the first screen under the header (about 7.5rem tall) and sits just
-   above its middle, a little less room above than below; the margin keeps the intro at a
-   chapter's distance */
+/* desktop: the photo on the left and the title page beside it, the name on two lines, filling
+   the first screen under the header (about 5.5rem tall) */
 @media (min-width: 64rem) {
   .hero {
     display: grid;
@@ -142,7 +103,7 @@ const DISCIPLINE_PAIRS = [PROFILE.disciplines.slice(0, 2), PROFILE.disciplines.s
     align-content: center;
     align-items: center;
     column-gap: clamp(3rem, 6vw, 6.5rem);
-    min-height: calc(100svh - 7.5rem);
+    min-height: calc(100svh - 5.5rem);
     padding-top: clamp(1.5rem, 4vh, 3rem);
     padding-bottom: clamp(3.5rem, 10vh, 6.5rem);
     margin-bottom: clamp(2rem, 4vw, 4rem);
@@ -179,21 +140,11 @@ const DISCIPLINE_PAIRS = [PROFILE.disciplines.slice(0, 2), PROFILE.disciplines.s
   }
 
   .hero__titlepage > :nth-child(3) {
-    animation-name: fade;
     animation-delay: 0.3s;
   }
 
   .hero__titlepage > :nth-child(4) {
-    animation-delay: 0.42s;
-  }
-
-  .hero__titlepage > :nth-child(5) {
-    animation-delay: 0.6s;
-  }
-
-  .hero .ornament::before,
-  .hero .ornament::after {
-    animation: draw 1.4s var(--ease) 0.45s both;
+    animation-delay: 0.45s;
   }
 }
 </style>

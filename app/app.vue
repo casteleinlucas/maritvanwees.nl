@@ -2,8 +2,8 @@
 import { withoutTrailingSlash } from 'ufo'
 import { PROFILE } from '@/constants/profile'
 
-// the page is a saddler's register: a title page, five chapters with roman numerals, photos
-// framed as plates, the experience on leather cards and a calling card to close
+// one page: the title page, a short intro, her horses and why they matter, her experience, her
+// mindset and a calling card to close
 
 // there are no pages, so without this every address would answer 200 with the home page.
 // error.vue shows the 404. not `fatal`: on the server it renders the error page all the same, and
@@ -60,10 +60,9 @@ useSeoMeta({
   <main id="main" tabindex="-1">
     <HeroSection />
     <IntroSection />
-    <ConnectionChapter />
-    <MindsetChapter />
+    <PassionChapter />
     <ExperienceChapter />
-    <WorldChapter />
+    <MindsetChapter />
     <ConnectChapter />
   </main>
   <SiteFooter />

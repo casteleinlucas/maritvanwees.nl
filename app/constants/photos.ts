@@ -13,37 +13,49 @@ export interface Photo {
   alt: string
 }
 
-// the five photos. the forest shoot ("marit & co") is marit with her own horse co; the arena
-// photos are on a bay the texts do not name, so the alt texts don't either
+// the seven photos. the forest shoot ("marit & co") is marit with co, her young grey she is training
+// herself; the arena photos are on renzo, the bay she competed with before
 export const PHOTOS = {
   forestBeside: {
     file: 'marit-naast-paard-bos',
     width: 2000,
     height: 1333,
-    alt: 'Marit van Wees staat in een zonovergoten bos naast haar paard Co en legt haar hand op de schouder van het paard.',
+    alt: 'Marit van Wees staat in een zonovergoten bos naast haar witte paard Co en legt haar hand op zijn schouder.',
   },
   forestLeaning: {
     file: 'marit-tegen-paard-bos',
-    width: 1600,
-    height: 1066,
-    alt: 'Marit van Wees leunt glimlachend tegen de hals van haar paard Co in een bos met berken.',
+    width: 2100,
+    height: 1400,
+    alt: 'Marit van Wees leunt glimlachend tegen de hals van haar witte paard Co in een bos met berken.',
+  },
+  forestHand: {
+    file: 'marit-hand-op-paard-bos',
+    width: 2400,
+    height: 1600,
+    alt: 'Marit van Wees staat lachend in een bos naast haar witte paard Co en legt haar hand op zijn hoofd.',
+  },
+  lake: {
+    file: 'marit-paard-water',
+    width: 2200,
+    height: 1467,
+    alt: 'Marit van Wees staat bij zonsondergang aan het water met haar witte paard Co, haar arm om zijn hals.',
   },
   gallop: {
     file: 'marit-galop-piste',
     width: 2048,
     height: 1366,
-    alt: 'Marit van Wees galoppeert lachend op een bruin paard over een zonnige buitenpiste.',
+    alt: 'Marit van Wees galoppeert lachend op haar bruine paard Renzo over een zonnige buitenpiste.',
   },
   jump: {
     file: 'marit-sprong-hindernis',
     width: 1884,
     height: 1256,
-    alt: 'Marit van Wees springt in wedstrijdkleding met een bruin paard over een hindernis.',
+    alt: 'Marit van Wees springt in wedstrijdkleding met haar bruine paard Renzo over een hindernis.',
   },
   riding: {
     file: 'marit-rijdend-lachend',
     width: 2048,
     height: 1366,
-    alt: 'Marit van Wees lacht in de camera terwijl ze in wedstrijdkleding een bruin paard rijdt.',
+    alt: 'Marit van Wees lacht in de camera terwijl ze in wedstrijdkleding haar bruine paard Renzo rijdt.',
   },
 } as const satisfies Record<string, Photo>

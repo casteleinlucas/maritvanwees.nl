@@ -9,7 +9,7 @@ import { PROFILE } from '@/constants/profile'
     <p class="site-footer__line">
       <span>{{ PROFILE.name }}</span>
       <span class="site-footer__dot" aria-hidden="true" />
-      <span>Fotografie: {{ PROFILE.photoCredit }}</span>
+      <span>{{ PROFILE.photoCredit }}</span>
       <span class="site-footer__dot" aria-hidden="true" />
       <a class="site-footer__top" href="#top">Terug naar boven</a>
     </p>
@@ -20,10 +20,7 @@ import { PROFILE } from '@/constants/profile'
 .site-footer {
   padding: 2.5rem var(--gutter);
   border-top: 1px solid var(--line-soft);
-  background:
-    var(--tex-grain-soft) 0 0 / 240px 240px,
-    var(--forest-950);
-  background-blend-mode: soft-light;
+  background: var(--forest-950);
   color: var(--cream-300);
 }
 
