@@ -20,7 +20,6 @@ useHead({
     <h1 class="error__title">
       {{ isNotFound ? 'Deze pagina bestaat niet.' : 'Er ging iets mis.' }}
     </h1>
-    <div class="ornament" aria-hidden="true"><i /></div>
     <a class="error__home" href="/">Naar {{ PROFILE.name }}</a>
   </main>
 </template>

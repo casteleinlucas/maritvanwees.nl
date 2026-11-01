@@ -1,5 +1,5 @@
-// the details on the page (source: marit's own texts, 2026-10-31; e-mail and linkedin from the
-// first version of this page, 2026-09-28)
+// the details on the page (source: marit's own texts, 2026-10-31; linkedin from the first version
+// of this page, 2026-09-28; e-mail corrected 2026-11-01)
 export const PROFILE = {
   name: 'Marit van Wees',
   tagline: 'Business-minded. Equestrian-driven.',
@@ -14,32 +14,33 @@ export const PROFILE = {
   jobTitle: 'Project Manager',
   employer: 'Equimarketing',
   school: 'Avans Hogeschool',
-  email: 'maritvanwees@gmail.com',
+  email: 'maritvanwees13@gmail.com',
   // the subject a mail from the page starts with
   emailSubject: 'Kennismaking',
   linkedin: 'https://www.linkedin.com/in/marit-van-wees-b62150317/',
-  // the forest shoot is by ByMarita; who took the arena photos is not known yet
-  photoCredit: 'ByMarita Fotografie & Media en [fotograaf sportfoto’s]',
+  // the forest shoot is by ByMarita; who took the arena photos is not known yet, so the credit
+  // names only the shoot
+  photoCredit: 'Bosfoto’s door ByMarita Fotografie & Media',
 } as const
 
-// the register in chapter III: where she works and studies, in her own words
+// where she works and studies (chapter "experience"), from her own texts with the repeats taken out
 export const EXPERIENCE = [
   {
-    numeral: 'I',
     name: 'Equimarketing',
     role: 'Project Manager',
-    text: 'Binnen Equimarketing ben ik werkzaam als projectmanager in een professionele omgeving waar marketing, strategie en de hippische sector samenkomen. In deze rol ontwikkel ik mijn organisatorische, commerciële en strategische vaardigheden binnen een branche waar mijn passie ligt.',
+    url: 'https://equimarketing.nl/teammembers/marit/',
+    text: 'Als projectmanager werk ik in een professionele omgeving waar marketing, strategie en de hippische sector samenkomen. Hier ontwikkel ik mijn organisatorische, commerciële en strategische vaardigheden, in de branche waar mijn hart ligt.',
   },
   {
-    numeral: 'II',
     name: 'Epplejeck',
     role: 'Equestrian Retail',
-    text: 'Bij Epplejeck combineer ik mijn passie voor paarden met mijn interesse in retail en commercie. Hier doe ik praktijkervaring op in klantgericht werken, verkoop en de dynamiek van een toonaangevende hippische retailer.',
+    url: 'https://www.epplejeck.com',
+    text: 'Bij deze toonaangevende hippische retailer doe ik praktijkervaring op in verkoop en klantgericht werken. Ik zie van dichtbij hoe een winkel in deze markt draait, van de vloer tot het assortiment.',
   },
   {
-    numeral: 'III',
-    name: 'Avans University of Applied Sciences',
+    name: 'Avans Hogeschool',
     role: 'Entrepreneurship & Retail Management',
-    text: 'Naast mijn werk volg ik de hbo-opleiding Ondernemerschap & Retail Management aan Avans Hogeschool. Hier verdiep ik me in ondernemerschap, bedrijfsstrategie, marketing en commerciële ontwikkeling, waarbij ik theoretische inzichten verbind aan de praktijk.',
+    url: 'https://www.avans.nl',
+    text: 'Naast mijn werk volg ik de hbo-opleiding Ondernemerschap & Retail Management. Ik verdiep me in ondernemerschap, bedrijfsstrategie, marketing en commerciële ontwikkeling, en wat ik leer pas ik direct toe in de praktijk.',
   },
 ] as const

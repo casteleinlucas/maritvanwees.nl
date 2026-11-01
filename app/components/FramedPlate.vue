@@ -2,7 +2,7 @@
 import { PHOTO_WIDTHS, PORTRAIT_WIDTHS, type Photo } from '@/constants/photos'
 
 // a photo framed as a plate: a linen passe-partout with a pale bevel round the window and brass
-// corner protectors, as on a leather case
+// corner protectors, as on a leather case, with an optional caption under it (which horse)
 const props = withDefaults(
   defineProps<{
     photo: Photo
@@ -16,6 +16,7 @@ const props = withDefaults(
     sizes: string
     // a warm, slightly muted grade so the arena photos sit with the gold of the forest shoot
     grade?: 'none' | 'sport'
+    caption?: string
     eager?: boolean
   }>(),
   { shape: 'portrait', crop: '50% 50%', grade: 'none', eager: false },
@@ -67,6 +68,7 @@ const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
         </picture>
       </div>
     </div>
+    <figcaption v-if="caption" class="plate__caption">{{ caption }}</figcaption>
   </figure>
 </template>
 
@@ -146,6 +148,21 @@ const PORTRAIT_SIZES = '(max-width: 37.49rem) 86vw, 26rem'
   height: 100%;
   object-fit: cover;
   object-position: var(--crop);
+}
+
+.plate:has(.plate__caption) {
+  margin-bottom: 2.75rem;
+}
+
+.plate__caption {
+  position: absolute;
+  top: calc(100% + 1rem);
+  left: 0;
+  right: 0;
+  color: var(--cream-300);
+  font-size: 0.95rem;
+  font-style: italic;
+  text-align: center;
 }
 
 .plate--hero {

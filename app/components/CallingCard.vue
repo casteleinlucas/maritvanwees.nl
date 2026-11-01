@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PROFILE } from '@/constants/profile'
 
-// how to reach her, as a calling card on linen paper in an engraved double frame. the linkedin
+// how to reach her, as a calling card on parchment in a thin frame. the linkedin
 // link shows her name rather than the profile's address, which ends in a string of digits
 const mailto = `mailto:${PROFILE.email}?subject=${encodeURIComponent(PROFILE.emailSubject)}`
 </script>
@@ -33,7 +33,6 @@ const mailto = `mailto:${PROFILE.email}?subject=${encodeURIComponent(PROFILE.ema
 <style scoped>
 .card {
   position: relative;
-  isolation: isolate;
   max-width: 34rem;
   padding: clamp(2.75rem, 6vw, 3.75rem) clamp(1.75rem, 5vw, 3.5rem);
   background: var(--parchment);
@@ -44,24 +43,11 @@ const mailto = `mailto:${PROFILE.email}?subject=${encodeURIComponent(PROFILE.ema
     0 0 0 1px rgba(0, 0, 0, 0.25);
 }
 
-.card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--tex-linen) 0 0 / 300px 300px;
-  mix-blend-mode: multiply;
-  opacity: 0.16;
-  pointer-events: none;
-}
-
 .card::after {
   content: '';
   position: absolute;
   inset: 12px;
-  border: 1px solid rgba(122, 91, 36, 0.5);
-  outline: 1px solid rgba(122, 91, 36, 0.28);
-  outline-offset: 3px;
+  border: 1px solid rgba(122, 91, 36, 0.4);
   pointer-events: none;
 }
 
