@@ -22,8 +22,9 @@ export default defineNuxtConfig({
     // security headers on every response. set here rather than in a proxy: under coolify only
     // traefik stands in front, and it adds none of its own. the csp allows inline scripts and
     // styles because nuxt inlines its config and FramedPlate sets the crop as a style attribute;
-    // everything else (fonts, photos, the payload) comes from this origin. data: is for the svg
-    // textures in the css
+    // everything else (fonts, photos, the payload) comes from this origin, except plausible's
+    // script and the visits it sends (plugins/plausible.client.ts). data: is for the svg textures
+    // in the css
     '/**': {
       headers: {
         'strict-transport-security': 'max-age=31536000',
@@ -32,11 +33,11 @@ export default defineNuxtConfig({
         'permissions-policy': 'camera=(), microphone=(), geolocation=()',
         'content-security-policy': [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline'",
+          "script-src 'self' 'unsafe-inline' https://plausible.maritvanwees.nl",
           "style-src 'self' 'unsafe-inline'",
           "img-src 'self' data:",
           "font-src 'self'",
-          "connect-src 'self'",
+          "connect-src 'self' https://plausible.maritvanwees.nl",
           "manifest-src 'self'",
           "frame-ancestors 'none'",
           "base-uri 'self'",
