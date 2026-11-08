@@ -4,7 +4,7 @@ import type { H3Event } from 'h3'
  * Plausible, on our own server. The browser fetches its script and sends its visits through this
  * site (routes/v/), so a blocker that knows Plausible's host lets them through.
  */
-export const plausibleHost = 'https://plausible.maritvanwees.nl'
+export const plausibleHost = 'https://plausible.lucascastelein.nl'
 
 /**
  * Only what Plausible reads goes along: the browser's user agent, and the visitor's address as
